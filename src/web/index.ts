@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import 'reflect-metadata';
 import app from './app';
 
 const PORT = process.env.APP_PORT || 8000;
