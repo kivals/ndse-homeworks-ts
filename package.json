@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/web/app.ts",
+    "dev": "nodemon src/web/app.ts",
+    "docker:dev": "docker-compose up",
     "build": "tsc"
   },
   "keywords": [
