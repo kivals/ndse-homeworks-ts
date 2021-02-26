@@ -1,4 +1,4 @@
-export interface IBook {
+export default interface IBook {
   title: string;
   description?: string;
   authors: string;
@@ -7,14 +7,3 @@ export interface IBook {
   fileName?: string;
   fileBook?: string;
 }
-
-// export interface User {
-//   firstName: string;
-//   lastName?: string;
-//   username: string;
-//   password: string;
-//   company: Types.ObjectId | Record<string, unknown>;
-//   gender: Gender;
-//   friends: Array<string>;
-//   creditCards?: Map<string, string>;
-// }
