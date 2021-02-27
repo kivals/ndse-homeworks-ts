@@ -1,14 +1,45 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
-import * as dotenv from 'dotenv';
-import apiRoutes from './routes';
+import IController from '../interfaces/IController';
+// import * as dotenv from 'dotenv';
+// import apiRoutes from './routes';
+//
+// dotenv.config();
+//
+// const app: Application = express();
+//
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+//
+// app.use('/api', apiRoutes);
+//
+// export default app;
 
-dotenv.config();
+class App {
+  public app: Application;
 
-const app: Application = express();
+  constructor(controllers: IController[]) {
+    this.app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+    this.initMiddlewares();
+    this.initControllers(controllers);
+  }
 
-app.use('/api', apiRoutes);
+  public listen(): void {
+    this.app.listen(3000, () => {
+      console.log(`App listening on the port 3000`);
+    });
+  }
 
-export default app;
+  private initMiddlewares() {
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: false }));
+  }
+
+  private initControllers(controllers: IController[]) {
+    controllers.forEach((controller) => {
+      this.app.use('/', controller.router);
+    });
+  }
+}
+
+export default App;
