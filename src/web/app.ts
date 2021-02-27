@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import IController from '../interfaces/IController';
+import logger from '../lib/logger';
 // import * as dotenv from 'dotenv';
 // import apiRoutes from './routes';
 //
@@ -26,7 +27,7 @@ class App {
 
   public listen(): void {
     this.app.listen(process.env.APP_PORT, () => {
-      console.log(`App listening on the port ${process.env.APP_PORT}`);
+      logger.info(`App listening on the port ${process.env.APP_PORT}`);
     });
   }
 
