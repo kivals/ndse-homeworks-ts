@@ -1,4 +1,4 @@
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Application } from 'express';
 import IController from '../interfaces/IController';
 // import * as dotenv from 'dotenv';
 // import apiRoutes from './routes';
