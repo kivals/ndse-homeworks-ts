@@ -8,7 +8,6 @@ import validationMiddleware from '../../middlewares/validation.middleware';
 import CreateBookDto from '../../book/book.dto';
 import IBook from '../../book/IBook';
 
-@injectable()
 class BookController implements IController {
   readonly bookService: IBookService;
 
