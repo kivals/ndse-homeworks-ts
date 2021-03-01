@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
+import 'reflect-metadata';
 import App from './app';
-import BookController from '../book/book.controller';
+import BookController from './contollers/book.controller';
 import logger from '../lib/logger';
-// import 'reflect-metadata';
-// import app from './app';
+
 dotenv.config();
 
 mongoose
