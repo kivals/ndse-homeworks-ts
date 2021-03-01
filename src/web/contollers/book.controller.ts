@@ -1,8 +1,9 @@
-import { Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import IController from '../../interfaces/IController';
 import IBook from '../../book/IBook';
 import IBookService from '../../book/IBookService';
 import container from '../../container';
+import HttpException from '../../exceptions/HttpException';
 
 class BookController implements IController {
   private readonly bookService: IBookService;
@@ -27,10 +28,18 @@ class BookController implements IController {
   public getBookById = async (
     request: Request,
     response: Response,
+    next: NextFunction,
   ): Promise<void> => {
     const { id } = request.params;
-    const books = await this.bookService.getBookById(id);
-    response.json(books);
+    try {
+      const book = await this.bookService.getBookById(id);
+      if (!book) {
+        next(HttpException.notFound('Книга не найдена'));
+      }
+      response.json(book);
+    } catch (error) {
+      next(error);
+    }
   };
 
   private initRoutes(): void {

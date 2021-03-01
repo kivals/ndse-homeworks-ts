@@ -1,19 +1,7 @@
 import express, { Application } from 'express';
 import IController from '../interfaces/IController';
 import logger from '../lib/logger';
-// import * as dotenv from 'dotenv';
-// import apiRoutes from './routes';
-//
-// dotenv.config();
-//
-// const app: Application = express();
-//
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: false }));
-//
-// app.use('/api', apiRoutes);
-//
-// export default app;
+import errorMiddleware from '../middlewares/error.middleware';
 
 class App {
   public app: Application;
@@ -23,6 +11,7 @@ class App {
 
     this.initMiddlewares();
     this.initControllers(controllers);
+    this.initializeErrorHandling();
   }
 
   public listen(): void {
@@ -34,6 +23,10 @@ class App {
   private initMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
+  }
+
+  private initializeErrorHandling() {
+    this.app.use(errorMiddleware);
   }
 
   private initControllers(controllers: IController[]) {
