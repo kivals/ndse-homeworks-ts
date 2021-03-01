@@ -12,6 +12,15 @@ class BookService implements IBookService {
   async getBookById(id: string): Promise<IBook> {
     return BookModel.findById(id);
   }
+
+  async modifyBook(id: string, bookData: IBook): Promise<IBook> {
+    return BookModel.findByIdAndUpdate(id, bookData, { new: true });
+  }
+
+  async createBook(bookData: IBook): Promise<IBook> {
+    const createdBook = new BookModel(bookData);
+    return createdBook.save();
+  }
 }
 
 export default BookService;

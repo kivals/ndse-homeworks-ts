@@ -1,12 +1,16 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import { injectable } from 'inversify';
 import IController from '../../interfaces/IController';
-import IBook from '../../book/IBook';
 import IBookService from '../../book/IBookService';
 import container from '../../container';
 import HttpException from '../../exceptions/HttpException';
+import validationMiddleware from '../../middlewares/validation.middleware';
+import CreateBookDto from '../../book/book.dto';
+import IBook from '../../book/IBook';
 
+@injectable()
 class BookController implements IController {
-  private readonly bookService: IBookService;
+  readonly bookService: IBookService;
 
   path = '/books';
 
@@ -17,15 +21,12 @@ class BookController implements IController {
     this.initRoutes();
   }
 
-  public getAllBooks = async (
-    request: Request,
-    response: Response,
-  ): Promise<void> => {
+  getAllBooks = async (request: Request, response: Response): Promise<void> => {
     const books = await this.bookService.getAllBook();
     response.json(books);
   };
 
-  public getBookById = async (
+  getBookById = async (
     request: Request,
     response: Response,
     next: NextFunction,
@@ -34,7 +35,7 @@ class BookController implements IController {
     try {
       const book = await this.bookService.getBookById(id);
       if (!book) {
-        next(HttpException.notFound('Книга не найдена'));
+        return next(HttpException.notFound('Книга не найдена'));
       }
       response.json(book);
     } catch (error) {
@@ -42,9 +43,39 @@ class BookController implements IController {
     }
   };
 
+  modifyBook = async (
+    request: Request,
+    response: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    const { id } = request.params;
+    const bookData: IBook = request.body;
+    const updatedBook = await this.bookService.modifyBook(id, bookData);
+    if (!updatedBook) {
+      return next(HttpException.notFound('Книга не найдена'));
+    }
+    response.json(updatedBook);
+  };
+
+  createBook = async (request: Request, response: Response): Promise<void> => {
+    const bookData: IBook = request.body;
+    const createdBook = await this.bookService.createBook(bookData);
+    response.json(createdBook);
+  };
+
   private initRoutes(): void {
     this.router.get(this.path, this.getAllBooks);
     this.router.get(`${this.path}/:id`, this.getBookById);
+    this.router.put(
+      `${this.path}/:id`,
+      validationMiddleware(CreateBookDto, true),
+      this.modifyBook,
+    );
+    this.router.post(
+      this.path,
+      validationMiddleware(CreateBookDto),
+      this.createBook,
+    );
   }
 }
 
